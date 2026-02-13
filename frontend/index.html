@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamFlow | Adaptive Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background-ambient">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="container glass-container">
+        <header>
+            <div class="brand">
+                <div class="logo-icon">⚡</div>
+                <div class="brand-text">
+                    <h1>StreamFlow</h1>
+                    <span class="subtitle">Adaptive Protocol Visualization</span>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center;">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+                    <span class="icon">🌙</span>
+                </button>
+                <div id="connection-status" class="status-badge connecting">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- Control Panel -->
+            <section class="card control-panel glass">
+                <div class="card-header">
+                    <h2><span class="icon">🎛️</span> Stream Controls</h2>
+                </div>
+                <div class="control-body">
+                    <div class="control-group">
+                        <label for="dataset-size">Dataset Complexity</label>
+                        <div class="select-wrapper">
+                            <select id="dataset-size">
+                                <option value="1000">🚀 Tiny (1k Docs)</option>
+                                <option value="5000">🏎️ Medium (5k Docs)</option>
+                                <option value="10000">🔥 Large (10k Docs)</option>
+                                <option value="50000">🌋 Massive (50k Docs)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="btn-stream-data" class="btn btn-primary">
+                            <span class="btn-icon">🌊</span> Stream Data
+                        </button>
+                        <button id="btn-stream-logs" class="btn btn-secondary">
+                            <span class="btn-icon">📜</span> Stream Logs
+                        </button>
+                        <button id="btn-stop" class="btn btn-danger" disabled>
+                            <span class="btn-icon">⏹️</span> Stop
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Panel -->
+            <section class="card stats-panel glass">
+                <div class="card-header">
+                    <h2><span class="icon">📊</span> Live Telemetry</h2>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Throughput</span>
+                        <div class="metric-value-group">
+                            <span id="metric-throughput" class="metric-value">0.00</span>
+                            <span class="metric-unit">MB/s</span>
+                        </div>
+                        <div class="metric-bar">
+                            <div class="bar-fill" id="bar-throughput"></div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Progress</span>
+                        <div class="metric-value-group">
+                            <span id="metric-progress" class="metric-value">0</span>
+                            <span class="metric-unit">%</span>
+                        </div>
+                        <div class="progress-ring" id="progress-highlight"></div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Chunks Processed</span>
+                        <div class="metric-value-group">
+                            <span id="metric-chunks" class="metric-value">0</span>
+                            <span class="metric-unit">chunks</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Backpressure Events</span>
+                        <div class="metric-value-group">
+                            <span id="metric-backpressure" class="metric-value">0</span>
+                            <span class="metric-unit">events</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Area -->
+            <section class="card visualization-panel glass">
+                <div class="card-header">
+                    <h2><span class="icon">📈</span> Real-time Network Analysis</h2>
+                    <div class="live-indicator"><span class="pulse"></span> LIVE</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="throughput-chart"></canvas>
+                </div>
+            </section>
+
+            <!-- Data Log -->
+            <section class="card log-panel glass">
+                <div class="card-header">
+                    <h2><span class="icon">💻</span> Terminal Stream</h2>
+                    <div class="terminal-controls">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                    </div>
+                </div>
+                <div id="stream-output" class="terminal-view">
+                    <div class="terminal-line system">
+                        <span class="ts">[SYSTEM]</span> Ready to initialize stream protocol...
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

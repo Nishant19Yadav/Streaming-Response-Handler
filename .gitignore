@@ -1,0 +1,34 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Test files
+files/
+!files/.gitkeep
+
+# Protocol repository (tracked separately)
+protocol-repo/
+
+# Docker
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+test-output.bin

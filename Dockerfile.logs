@@ -1,0 +1,20 @@
+FROM alpine:3.18
+
+RUN apk add --no-cache \
+    bash \
+    coreutils \
+    gzip \
+    pigz \
+    grep \
+    sed
+
+WORKDIR /app
+
+# Create log directory
+RUN mkdir -p /var/log/streaming
+
+# Copy processing scripts
+COPY scripts/*.sh /scripts/
+RUN chmod +x /scripts/*.sh
+
+CMD ["tail", "-f", "/dev/null"]

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/streaming_db
+      - UV_THREADPOOL_SIZE=128
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+      - ./files:/app/files
+      - protocol-repo:/app/protocol-repo
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+  mongo:
+    image: mongo:6
+    command: --wiredTigerCacheSizeGB 1.5 --serviceExecutor adaptive
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=streaming_db
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  # Log aggregation with Unix pipes
+  log-processor:
+    build:
+      context: .
+      dockerfile: Dockerfile.logs
+    volumes:
+      - ./scripts:/scripts
+      - logs:/var/log/streaming
+    command: >
+      sh -c "tail -f /var/log/streaming/app.log 
+      | /scripts/stream-processor.sh 
+      > /var/log/streaming/processed.log"
+
+volumes:
+  mongo-data:
+  protocol-repo:
+  logs:
