@@ -4,401 +4,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProStream | Discover & Watch</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --accent: #a855f7;
-            --bg: #0b0f1a;
-            --card: rgba(22, 28, 45, 0.7);
-            --text: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.03);
-            --nav: rgba(11, 15, 26, 0.8);
-        }
+    <title>ProStream | Unlimited Video Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            background-image:
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0, transparent 40%),
-                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.1) 0, transparent 40%);
-        }
-
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: var(--nav);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--glass);
-            padding: 1.25rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.75rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(to right, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .hero {
-            height: 400px;
-            border-radius: 2rem;
-            background: linear-gradient(45deg, #1e1b4b, #312e81);
-            margin-bottom: 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: radial-gradient(circle at 70% 50%, rgba(99, 102, 241, 0.2), transparent);
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            max-width: 600px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--glass);
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .video-card {
-            background: var(--card);
-            border-radius: 1.25rem;
-            overflow: hidden;
-            border: 1px solid var(--glass);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .video-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
-        }
-
-        .thumbnail {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .thumbnail svg {
-            transition: transform 0.3s;
-            opacity: 0.8;
-        }
-
-        .video-card:hover .thumbnail svg {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-
-        .video-info {
-            padding: 1.25rem;
-        }
-
-        .video-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: #f1f5f9;
-        }
-
-        .video-meta {
-            font-size: 0.85rem;
-            color: #64748b;
-            display: flex;
-            gap: 1rem;
-        }
-
-        /* Player Overlay */
-        .player-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(2, 6, 23, 0.98);
-            z-index: 1000;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .player-container {
-            width: 90%;
-            max-width: 1100px;
-            position: relative;
-        }
-
-        video {
-            width: 100%;
-            border-radius: 1.5rem;
-            box-shadow: 0 0 100px rgba(99, 102, 241, 0.2);
-            background: black;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-        }
-
-        .player-details {
-            margin-top: 2rem;
-            width: 90%;
-            max-width: 1100px;
-            text-align: left;
-        }
-
-        .player-details h2 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .player-details p {
-            color: #94a3b8;
-            line-height: 1.6;
-        }
-
-        .no-videos {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 5rem;
-            color: #475569;
-            font-size: 1.2rem;
-        }
-
-        /* Admin link */
-        .admin-link {
-            padding: 0.6rem 1.2rem;
-            background: var(--glass);
-            border-radius: 1rem;
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .admin-link:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-        }
-    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        // Initialize Firebase
+        firebase.initializeApp(window.firebaseConfig);
+        firebase.analytics();
+    </script>
 </head>
 
+
 <body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="/" class="logo">
+                <i class="fa-solid fa-play"></i> <span>ProStream</span>
+            </a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="loadCategory('all')">
+                        <i class="fa-solid fa-house"></i> <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="loadCategory('trending')">
+                        <i class="fa-solid fa-fire"></i> <span>Trending</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showHistory()">
+                        <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showLiked()">
+                        <i class="fa-solid fa-thumbs-up"></i> <span>Liked Videos</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="divider"></div>
+            <ul class="nav-links" id="admin-link-container" style="display: none;">
+                <li class="nav-item">
+                    <a href="/admin.html" class="nav-link">
+                        <i class="fa-solid fa-user-shield"></i> <span>Admin Panel</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
 
-    <nav>
-        <a href="/" class="logo">ProStream</a>
-        <div id="nav-actions" style="display: flex; gap: 15px; align-items: center;">
-            <!-- Populated by JS -->
-        </div>
-    </nav>
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search for movies, shows, or creators...">
+                </div>
+                <div class="user-profile" id="userProfileArea">
+                    <a href="auth.html" class="btn-login">Login / Sign Up</a>
+                </div>
+            </header>
 
-    <div class="container">
-        <div class="hero">
-            <h1>Adaptive Experiences.</h1>
-            <p>Experience the future of streaming with real-time backpressure management and intelligent buffering.</p>
-        </div>
+            <!-- Hero Section -->
+            <section class="hero" id="heroBanner">
+                <div class="hero-content">
+                    <h1>Trending Video</h1>
+                    <p>Experience high-quality streaming without limits. Join millions of viewers and explore the most
+                        popular content today.</p>
+                    <button class="btn-auth" id="playHeroBtn" style="padding: 12px 30px; width: auto;">
+                        <i class="fa-solid fa-play"></i> Watch Now
+                    </button>
+                </div>
+            </section>
 
-        <h2 class="section-title">Fresh for you</h2>
+            <!-- Video Sections -->
+            <section class="video-section">
+                <div class="section-title">
+                    <span id="sectionLabel">All Videos</span>
+                </div>
+                <div class="video-grid" id="videoGrid">
+                    <!-- Dynamic Loading -->
+                </div>
+            </section>
 
-        <div class="video-grid" id="video-grid">
-            <!-- Videos will load here -->
-            <div class="no-videos">Scanning the stream universe...</div>
-        </div>
+            <!-- Continue Watching (Logged in only) -->
+            <section class="video-section" id="continueSection" style="display: none;">
+                <div class="section-title">Recently Watched</div>
+                <div class="video-grid" id="historyGrid"></div>
+            </section>
+        </main>
     </div>
 
-    <div class="player-overlay" id="player-overlay">
+    <!-- Video Player Modal -->
+    <div class="modal" id="videoModal">
+        <span class="close-modal" id="closeModal">&times;</span>
         <div class="player-container">
-            <button class="close-btn" onclick="closePlayer()">CLOSE PLAYER</button>
-            <video id="video-player" controls preload="none">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <div class="player-details" id="player-details">
-            <!-- Details injected here -->
+            <video id="mainPlayer" controls autoplay controlsList="nodownload"></video>
+            <div id="videoInfoOverlay" style="padding: 20px; color: white;">
+                <h2 id="modalVideoTitle">Video Title</h2>
+                <div style="display: flex; gap: 20px; align-items: center; margin-top: 10px;">
+                    <span id="modalVideoViews"><i class="fa-solid fa-eye"></i> 0 views</span>
+                    <button id="likeBtn"
+                        style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">
+                        <i class="fa-regular fa-thumbs-up"></i> Like
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        const API_URL = '/api/videos';
-
-        function checkAuth() {
-            const userJson = localStorage.getItem('prostream_user');
-            const navActions = document.getElementById('nav-actions');
-
-            if (userJson) {
-                const user = JSON.parse(userJson);
-                navActions.innerHTML = `
-                    ${user.role === 'admin' ? '<a href="/admin.html" class="admin-link">Admin Dashboard</a>' : ''}
-                    <span style="color: #64748b; font-size: 0.9rem;">Hi, ${user.username}</span>
-                    <button onclick="logout()" style="background: var(--glass); border: none; color: white; padding: 0.5rem 1rem; border-radius: 0.75rem; cursor: pointer; font-size: 0.85rem;">Logout</button>
-                `;
-            } else {
-                navActions.innerHTML = `
-                    <a href="/auth.html" class="admin-link" style="background: var(--primary); color: white;">Login / Signup</a>
-                `;
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('prostream_token');
-            localStorage.removeItem('prostream_user');
-            location.reload();
-        }
-
-        async function loadVideos() {
-            try {
-                const res = await fetch(API_URL);
-                const videos = await res.json();
-                const grid = document.getElementById('video-grid');
-
-                if (videos.length === 0) {
-                    grid.innerHTML = '<div class="no-videos">No videos found. Check back later or visit Admin to upload.</div>';
-                    return;
-                }
-
-                grid.innerHTML = '';
-                videos.forEach(video => {
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.onclick = () => openPlayer(video);
-
-                    card.innerHTML = `
-                    <div class="thumbnail">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
-                            <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                        </svg>
-                    </div>
-                    <div class="video-info">
-                        <div class="video-title">${video.title}</div>
-                        <div class="video-meta">
-                            <span>${Math.round(video.size / 1024 / 1024)} MB</span>
-                            <span>•</span>
-                            <span>${new Date(video.uploadDate).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                `;
-                    grid.appendChild(card);
-                });
-            } catch (err) {
-                console.error('Failed to load videos:', err);
-            }
-        }
-
-        function openPlayer(video) {
-            const overlay = document.getElementById('player-overlay');
-            const player = document.getElementById('video-player');
-            const details = document.getElementById('player-details');
-
-            player.src = `${API_URL}/stream/${video._id}`;
-            details.innerHTML = `
-            <h2>${video.title}</h2>
-            <p>${video.description || 'No description available for this stream.'}</p>
-        `;
-
-            overlay.style.display = 'flex';
-            setTimeout(() => overlay.style.opacity = '1', 10);
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePlayer() {
-            const overlay = document.getElementById('player-overlay');
-            const player = document.getElementById('video-player');
-
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                player.pause();
-                player.src = '';
-            }, 300);
-            document.body.style.overflow = 'auto';
-        }
-
-        checkAuth();
-        loadVideos();
-    </script>
-
+    <script src="app.js"></script>
 </body>
 
 </html>

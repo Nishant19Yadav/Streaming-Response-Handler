@@ -17,13 +17,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage,
-    limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit for demo
+    limits: { fileSize: 500 * 1024 * 1024 } // 500MB limit
 });
 
 // Routes
-router.post('/upload', authenticate, authorize('admin'), upload.single('video'), videoController.uploadVideo);
+router.post('/upload', authenticate, authorize('admin'), upload.fields([
+    { name: 'video', maxCount: 1 },
+    { name: 'thumbnail', maxCount: 1 }
+]), videoController.uploadVideo);
+
 router.get('/', videoController.getVideos);
+router.get('/search', videoController.searchVideos);
 router.get('/stream/:id', videoController.streamVideo);
+router.get('/stats', authenticate, authorize('admin'), videoController.getAdminStats);
+router.put('/:id', authenticate, authorize('admin'), videoController.updateVideo);
 router.delete('/:id', authenticate, authorize('admin'), videoController.deleteVideo);
 
 module.exports = router;
+

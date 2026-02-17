@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - ProStream</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card" style="border-top: 5px solid var(--primary);">
+            <h2>Admin Console</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 14px;">Please authenticate to access
+                administrator tools.</p>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="adminUser" required placeholder="Admin username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-container">
+                        <input type="password" id="adminPass" required placeholder="Admin password">
+                        <i class="fa-solid fa-eye-slash password-toggle"
+                            onclick="togglePasswordVisibility('adminPass', this)"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth">Access Dashboard</button>
+            </form>
+            <p class="auth-switch"><a href="/">Back to Home</a></p>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('adminUser').value;
+            const password = document.getElementById('adminPass').value;
+
+            try {
+                const res = await fetch('/api/auth/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/admin.html';
+                } else {
+                    alert(data.error || 'Access Denied');
+                }
+            } catch (err) {
+                alert('Login failed');
+            }
+        });
+    </script>
+</body>
+
+</html>

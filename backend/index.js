@@ -1,10 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+
 const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
+const passport = require('passport');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+
+require('./utils/passport'); // Load passport config
 
 const videoRoutes = require('./routes/videoRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -22,7 +28,19 @@ if (!fs.existsSync('uploads')) {
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'pro-stream-secret',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 
 // API Routes
 app.use('/api/auth', authRoutes);

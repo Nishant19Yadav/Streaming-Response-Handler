@@ -4,280 +4,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProStream | Join the Universe</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --accent: #a855f7;
-            --bg: #0b1f3c;
-            --card: rgba(15, 23, 42, 0.8);
-            --text: #f1f5f9;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
+    <title>Login | Sign Up - ProStream</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image:
-                radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.15) 0, transparent 40%),
-                radial-gradient(at 90% 90%, rgba(168, 85, 247, 0.15) 0, transparent 40%);
-        }
-
-        .auth-container {
-            width: 100%;
-            max-width: 450px;
-            padding: 3rem;
-            background: var(--card);
-            backdrop-filter: blur(20px);
-            border-radius: 2rem;
-            border: 1px solid var(--glass);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 2rem;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        h2 {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        p {
-            color: #94a3b8;
-            margin-bottom: 2.5rem;
-            font-size: 0.95rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--glass);
-            border-radius: 1rem;
-            color: white;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input:focus {
-            border-color: var(--primary);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            border: none;
-            border-radius: 1rem;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 1rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
-        }
-
-        .toggle-link {
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #94a3b8;
-        }
-
-        .toggle-link span {
-            color: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        #status-msg {
-            margin-top: 1.5rem;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            font-size: 0.85rem;
-            display: none;
-        }
-
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .success {
-            background: rgba(34, 197, 94, 0.1);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        firebase.initializeApp(window.firebaseConfig);
+    </script>
 </head>
 
-<body>
 
+<body class="auth-page">
     <div class="auth-container">
-        <a href="/" class="logo">ProStream</a>
+        <div class="auth-card">
+            <a href="/" class="logo" style="margin-bottom: 30px; display: inline-block;">
+                <i class="fa-solid fa-play"></i> <span>ProStream</span>
+            </a>
 
-        <div id="login-view">
-            <h2>Welcome Back</h2>
-            <p>Your universe is waiting.</p>
-            <form id="login-form">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="login-username" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="btn">Login</button>
-            </form>
-            <div class="toggle-link">New here? <span onclick="toggleView()">Create an account</span></div>
+            <div id="loginFormContainer">
+                <h2>Sign In</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required placeholder="name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-container">
+                            <input type="password" id="loginPassword" required placeholder="Enter password">
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                                onclick="togglePasswordVisibility('loginPassword', this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth">Sign In</button>
+                </form>
+                <div class="divider">OR</div>
+                <button class="btn-google" id="googleLoginBtn">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20" alt="Google">
+                    Continue with Google
+                </button>
+                <p class="auth-switch">New to ProStream? <a href="#" onclick="toggleAuth()">Sign up now</a></p>
+                <p class="auth-switch" style="margin-top: 10px;"><a href="/admin-login.html"
+                        style="font-size: 12px; color: var(--text-muted);">Admin Login</a></p>
+            </div>
+
+            <div id="signupFormContainer" style="display: none;">
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" required placeholder="name@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-container">
+                            <input type="password" id="signupPassword" required placeholder="Create password">
+                            <i class="fa-solid fa-eye-slash password-toggle"
+                                onclick="togglePasswordVisibility('signupPassword', this)"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-auth">Sign Up</button>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="#" onclick="toggleAuth()">Sign in</a></p>
+            </div>
         </div>
-
-        <div id="signup-view" style="display: none;">
-            <h2>Create Account</h2>
-            <p>Join the next generation of streaming.</p>
-            <form id="signup-form">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="signup-username" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="signup-password" required>
-                </div>
-                <div class="form-group">
-                    <label>Account Type</label>
-                    <select id="signup-role">
-                        <option value="user">Viewer (User)</option>
-                        <option value="admin">Creator (Admin)</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Sign Up</button>
-            </form>
-            <div class="toggle-link">Already have an account? <span onclick="toggleView()">Login</span></div>
-        </div>
-
-        <div id="status-msg"></div>
     </div>
 
     <script>
-        function toggleView() {
-            const loginView = document.getElementById('login-view');
-            const signupView = document.getElementById('signup-view');
-            const isLogin = loginView.style.display !== 'none';
-
-            loginView.style.display = isLogin ? 'none' : 'block';
-            signupView.style.display = isLogin ? 'block' : 'none';
-            document.getElementById('status-msg').style.display = 'none';
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
         }
 
-        function showStatus(msg, type) {
-            const status = document.getElementById('status-msg');
-            status.textContent = msg;
-            status.className = type;
-            status.style.display = 'block';
+        function toggleAuth() {
+            const login = document.getElementById('loginFormContainer');
+            const signup = document.getElementById('signupFormContainer');
+            if (login.style.display === 'none') {
+                login.style.display = 'block';
+                signup.style.display = 'none';
+            } else {
+                login.style.display = 'none';
+                signup.style.display = 'block';
+            }
         }
 
-        document.getElementById('signup-form').onsubmit = async (e) => {
+        // Handle forms
+        const authBase = '/api/auth';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('signup-username').value;
-            const password = document.getElementById('signup-password').value;
-            const role = document.getElementById('signup-role').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
             try {
-                const res = await fetch('/api/auth/register', {
+                const res = await fetch(`${authBase}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, role })
+                    body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
-                if (res.ok) {
-                    showStatus('Account created! Please login.', 'success');
-                    setTimeout(toggleView, 1500);
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/';
                 } else {
-                    showStatus(data.error || 'Signup failed', 'error');
+                    alert(data.error);
                 }
             } catch (err) {
-                showStatus('Network error occurred', 'error');
+                alert('Login failed');
             }
-        };
+        });
 
-        document.getElementById('login-form').onsubmit = async (e) => {
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
 
             try {
-                const res = await fetch('/api/auth/login', {
+                const res = await fetch(`${authBase}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ name, email, password })
                 });
                 const data = await res.json();
-                if (res.ok) {
-                    localStorage.setItem('prostream_token', data.token);
-                    localStorage.setItem('prostream_user', JSON.stringify(data.user));
-                    showStatus('Login successful! Transporting...', 'success');
-
-                    setTimeout(() => {
-                        window.location.href = data.user.role === 'admin' ? '/admin.html' : '/';
-                    }, 1000);
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/';
                 } else {
-                    showStatus(data.error || 'Login failed', 'error');
+                    alert(data.error);
                 }
             } catch (err) {
-                showStatus('Network error occurred', 'error');
+                alert('Signup failed');
             }
+        });
+
+        document.getElementById('googleLoginBtn').onclick = async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await firebase.auth().signInWithPopup(provider);
+                const user = result.user;
+
+                // Sync with our backend
+                const res = await fetch(`${authBase}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: user.displayName,
+                        email: user.email,
+                        googleId: user.uid,
+                        loginType: 'google'
+                    })
+                });
+
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    console.log('Login successful, redirecting...');
+                    window.location.href = 'index.html'; // Use explicit filename
+                } else {
+                    alert('Login failed: ' + (data.error || 'Server did not return a token'));
+                }
+            } catch (error) {
+                console.error('Google login failed', error);
+                alert('Connection failed: ' + error.message);
+            }
+
         };
 
-        // Redirect if already logged in
-        const userJson = localStorage.getItem('prostream_user');
-        if (userJson) {
-            const user = JSON.parse(userJson);
-            window.location.href = user.role === 'admin' ? '/admin.html' : '/';
-        }
     </script>
-
 </body>
 
 </html>
