@@ -1,252 +1,78 @@
-# Adaptive Streaming System
+# ProStream | Next-Gen Video Streaming Platform
 
-A high-performance Node.js streaming system with adaptive buffering, MongoDB cursor streaming, Unix pipe integration, and Git-based protocol tracking.
+A production-ready streaming platform backend built with Node.js, Express, and MongoDB. This project focuses on high-efficiency data delivery using Node.js Streams, Adaptive Buffering, and Backpressure management.
 
-## 🚀 Features
+## 🚀 Key Features
 
-### Core Capabilities
-- **Adaptive Buffering**: Dynamic buffer sizing (16KB-1MB) based on client response times
-- **MongoDB Streaming**: Efficient cursor-based streaming with batch processing
-- **Backpressure Management**: Sophisticated pause/resume mechanisms with metrics
-- **Unix Pipe Integration**: Shell script-based compression using pigz, pbzip2, xz, zstd
-- **Protocol Versioning**: Git-based tracking of streaming protocol changes
-- **Rate Limiting**: Token bucket algorithm for bandwidth control
-
-### Architecture Highlights
-- **Memory Efficient**: Streams data in chunks without buffering entire datasets
-- **Production Ready**: Docker orchestration, graceful shutdown, comprehensive error handling
-- **Observable**: Buffer stats endpoint, detailed logging, performance metrics
-- **Flexible Compression**: Multiple algorithms with automatic fallback
-
-## 📋 Prerequisites
-
-- Node.js >= 18.0.0
-- Docker & Docker Compose (optional, for full stack)
-- Git
-- MongoDB (or use Docker Compose)
-
-## 🛠️ Installation
-
-### Quick Start (Windows)
-
-```powershell
-# Install dependencies
-npm install
-
-# Generate test data and initialize protocol tracking
-node -e "const GitProtocolTracker = require('./lib/git-tracker'); const tracker = new GitProtocolTracker(); tracker.trackProtocolChange('mongo-stream', {version: '1.0.0', batchSize: 1000}, {description: 'Initial protocol'});"
-
-# Start MongoDB (if not using Docker)
-# Ensure MongoDB is running on localhost:27017
-
-# Start the server
-npm start
-```
-
-### Full Stack with Docker
-
-```bash
-# Start all services (MongoDB, Redis, App, Log Processor)
-docker-compose up -d
-
-# View logs
-docker-compose logs -f app
-
-# Stop services
-docker-compose down
-```
-
-## 🎯 API Endpoints
-
-### Health Check
-```bash
-curl http://localhost:3000/health
-```
-
-### Stream Large Dataset
-```bash
-# Uncompressed JSON stream
-curl http://localhost:3000/api/stream/large-dataset?collection=large_data&compress=false
-
-# Compressed stream (gzip via Unix pipes)
-curl http://localhost:3000/api/stream/large-dataset?collection=large_data&compress=true
-```
-
-### Stream File
-```bash
-curl http://localhost:3000/api/stream/file/large-file.bin -o output.bin
-```
-
-### Real-time Logs
-```bash
-curl http://localhost:3000/api/stream/logs
-```
-
-### Admin Stats
-```bash
-curl http://localhost:3000/admin/buffer-stats
-```
-
-## 🧪 Testing & Benchmarks
-
-### Run Performance Benchmarks
-```bash
-npm run benchmark
-```
-
-Expected output:
-```
---- Uncompressed Mongo Stream ---
-{
-  duration: '5234.56',
-  bytesReceived: 52428800,
-  chunks: 512,
-  throughput: '9.54 MB/s',
-  backpressureEvents: 3,
-  avgChunkSize: '102400.00'
-}
-```
-
-### Track Protocol Changes
-```bash
-npm run protocol:track
-```
-
-## 📊 Adaptive Buffering
-
-The system automatically adjusts buffer sizes based on performance:
-
-- **Slow Client** (>100ms avg response): Increases buffer → Reduces system calls
-- **Fast Client** (<20ms avg response): Decreases buffer → Reduces latency
-- **Adjustment Range**: 16KB (min) to 1MB (max)
-- **Growth Factor**: 1.5x when slow
-- **Shrink Factor**: 0.8x when fast
-
-### Example Log Output
-```
-[AdaptiveBuffer] increasing: 65536 -> 98304 bytes (avg response: 125ms)
-[AdaptiveBuffer] decreasing: 98304 -> 78643 bytes (avg response: 15ms)
-```
-
-## 🔧 Configuration
-
-### Environment Variables
-```bash
-PORT=3000                                    # Server port
-MONGO_URI=mongodb://localhost:27017          # MongoDB connection
-UV_THREADPOOL_SIZE=128                       # Node.js thread pool size
-CHUNK_SIZE=65536                             # Unix pipe chunk size
-```
-
-### Buffer Configuration (server.js)
-```javascript
-const BUFFER_CONFIG = {
-  minSize: 16 * 1024,      // 16KB minimum
-  maxSize: 1024 * 1024,    // 1MB maximum
-  initialSize: 64 * 1024,  // 64KB initial
-  adjustmentFactor: 1.5,   // Grow by 50%
-  shrinkFactor: 0.8,       // Shrink by 20%
-  slowThreshold: 100,      // ms
-  fastThreshold: 20        // ms
-};
-```
+- **Efficient Streaming**: Streams large video files in chunks using `fs.createReadStream` and `pipeline()`, ensuring zero memory overflow even for multi-gigabyte files.
+- **Adaptive Buffering**: A custom `AdaptiveBuffer` transform stream that monitors client response times and dynamically adjusts the internal buffer size (32KB to 2MB).
+- **MongoDB Integration**: Stores video metadata and leverages MongoDB cursor streaming for scalable data access.
+- **Backpressure Handling**: Uses the Node.js `pipeline` API to automatically pause/resume data flow based on client bandwidth, preventing server crashes.
+- **Video Seek Support**: Implements HTTP Range requests (status 206) allowing users to jump to any part of the video instantly.
+- **On-the-fly Compression**: Supports Gzip compression for streams to reduce bandwidth consumption.
+- **Modern UI**: A premium glassmorphism frontend built with Vanilla JS, CSS, and HTML.
 
 ## 📁 Project Structure
 
-```
-adaptive-streaming-system/
-├── server.js                    # Main Express server
-├── lib/
-│   ├── backpressure-handler.js  # Backpressure management
-│   └── git-tracker.js           # Protocol version tracking
-├── scripts/
-│   ├── compress-stream.sh       # Unix pipe compression
-│   ├── decompress-stream.sh     # Decompression
-│   ├── stream-processor.sh      # Multi-stage processor
-│   └── track-protocol.js        # Protocol tracking CLI
-├── benchmarks/
-│   └── stream-benchmark.js      # Performance tests
-├── files/                       # Test data files
-├── logs/                        # Application logs
-├── protocol-repo/               # Git-tracked protocols
-├── docker-compose.yml           # Full stack orchestration
-├── Dockerfile                   # App container
-├── Dockerfile.logs              # Log processor container
-└── package.json
+```text
+├── backend/
+│   ├── controllers/    # Request handlers (Upload, Stream, Delete)
+│   ├── models/         # Mongoose schemas (Video metadata)
+│   ├── routes/         # Express API routes
+│   ├── streams/        # Custom stream logic (AdaptiveBuffer, Compression)
+│   └── index.js        # Main entry point
+├── frontend/           # Premium Glassmorphism UI
+├── uploads/            # Local storage for video files
+├── package.json        # Dependencies and scripts
+└── README.md
 ```
 
-## 🔍 Key Components
+## 🛠️ Tech Stack
 
-### 1. AdaptiveBuffer (server.js)
-Transform stream that dynamically adjusts buffer size based on client performance metrics.
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB (Mongoose)
+- **Streams**: Node.js Streams API (Readable, Writable, Transform)
+- **File Handling**: Multer (for uploads)
 
-### 2. MongoStreamService (server.js)
-Handles MongoDB cursor streaming with:
-- Generator-based async iteration
-- Configurable batch sizes
-- Progress logging for large datasets
-- Automatic cursor cleanup
+## 🚦 How it Works
 
-### 3. CompressionStream (server.js)
-Spawns shell scripts for Unix pipe-based compression:
-- Supports: gzip, bzip2, xz, zstd
-- Auto-detects parallel tools (pigz, pbzip2)
-- Fallback to standard tools
+### 1. Streaming vs. Buffering
+Unlike standard file serving, this platform never loads the entire file into RAM. It reads the file piece-by-piece from the disk and pushes it directly to the socket as soon as the client is ready to receive it.
 
-### 4. GitProtocolTracker (lib/git-tracker.js)
-Tracks streaming protocol changes:
-- SHA-256 based versioning
-- Changelog generation
-- Diff between versions
-- Streaming history access
+### 2. Backpressure
+When a client has slow internet, the network socket's internal buffer fills up. Node.js detects this and "pauses" the file reading process. Once the client clears some data, Node.js "resumes" reading. This keeps memory usage constant (usually < 50MB) regardless of file size.
 
-### 5. BackpressureManager (lib/backpressure-handler.js)
-Advanced backpressure handling:
-- Pause/resume mechanisms
-- Exponential moving average tracking
-- Queue depth monitoring
-- Event-based signaling
+### 3. Adaptive Buffering Logic
+1. **Initial**: Starts at 128KB.
+2. **Analysis**: Tracks time taken to push each chunk.
+3. **Growth**: If the client is consistently slow (>150ms), it increases buffer size to reduce the frequency of system calls.
+4. **Shrink**: If the client is very fast (<30ms), it shrinks buffer size to minimize latency.
 
-## 🐳 Docker Services
+## 🏁 Setup Instructions
 
-- **app**: Node.js streaming server (port 3000)
-- **mongo**: MongoDB 6 with adaptive executor
-- **redis**: Redis 7 for caching
-- **log-processor**: Unix pipe-based log aggregation
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-## 📈 Performance Tips
+2. **Ensure MongoDB is Running**:
+   Default connection: `mongodb://localhost:27017/pro_streaming_db`
 
-1. **Increase Thread Pool**: Set `UV_THREADPOOL_SIZE=128` for high concurrency
-2. **Tune MongoDB**: Use `--wiredTigerCacheSizeGB` based on available RAM
-3. **Use Parallel Compression**: Install `pigz` and `pbzip2` for faster compression
-4. **Monitor Buffer Stats**: Check `/admin/buffer-stats` for optimization insights
-5. **Adjust Batch Size**: Tune MongoDB batch size based on document size
+3. **Start the Platform**:
+   ```bash
+   npm start
+   ```
 
-## 🔒 Security
+4. **Access UI**:
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- Non-root user in Docker containers
-- Input validation on all endpoints
-- Graceful shutdown handling
-- Client disconnect detection
-- Resource limits in Docker Compose
+## 📖 API Documentation
 
-## 📝 License
-
-MIT
-
-## 🤝 Contributing
-
-Contributions welcome! Areas for improvement:
-- Additional compression algorithms
-- More sophisticated adaptive algorithms
-- WebSocket streaming support
-- Metrics dashboard
-- Load testing suite
-
-## 📞 Support
-
-For issues or questions, please open a GitHub issue.
+- `POST /api/videos/upload`: Upload a video file (form-data: title, video).
+- `GET /api/videos`: List all available videos.
+- `GET /api/videos/stream/:id`: Stream video data (supports range).
+- `DELETE /api/videos/:id`: Delete a video and its file.
 
 ---
-
-**Built with ❤️ using Node.js Streams, Unix Pipes, and Git**
+Built as a high-performance demonstration of Node.js Streams.

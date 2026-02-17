@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProStream Admin | Management Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --accent: #ef4444;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--glass);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-section {
+            background: var(--card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass);
+            border-radius: 0.75rem;
+            color: white;
+            font-family: inherit;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .video-card {
+            background: var(--card);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--glass);
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+        }
+
+        .player-preview {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-meta {
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .active-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        video {
+            width: 80%;
+            max-width: 1000px;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-player {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        #upload-status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Glassmorphism utility */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(5px);
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">ProStream Admin</div>
+            <div style="display: flex; gap: 20px; align-items: center;" id="admin-actions">
+                <a href="/" style="color: #94a3b8; text-decoration: none; font-weight: 600;">View Site</a>
+                <button onclick="logout()"
+                    style="background: var(--glass); border: none; color: white; padding: 0.5rem 1rem; border-radius: 0.75rem; cursor: pointer; font-size: 0.85rem;">Logout</button>
+            </div>
+        </header>
+
+        <div class="upload-section">
+            <h2>Upload New Video</h2>
+            <form id="upload-form">
+                <div class="form-group">
+                    <input type="text" id="title" placeholder="Video Title" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="description" placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="file" id="video-file" accept="video/*" required>
+                </div>
+                <button type="submit">Upload Experience</button>
+            </form>
+            <div id="upload-status"></div>
+        </div>
+
+        <div id="video-list-container">
+            <h2>Available Streams</h2>
+            <div class="video-grid" id="video-grid">
+                <!-- Videos will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="active-player" id="player-modal">
+        <div class="close-player" onclick="closePlayer()">&times;</div>
+        <video id="main-video" controls autoplay>
+            Your browser does not support the video tag.
+        </video>
+        <div style="margin-top:20px" id="player-info"></div>
+    </div>
+
+    <script>
+        const API_URL = '/api/videos';
+        const AUTH_TOKEN = localStorage.getItem('prostream_token');
+
+        function checkAdmin() {
+            const userJson = localStorage.getItem('prostream_user');
+            if (!userJson) {
+                window.location.href = '/auth.html';
+                return;
+            }
+            const user = JSON.parse(userJson);
+            if (user.role !== 'admin') {
+                alert('Access Denied: Admins Only');
+                window.location.href = '/';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('prostream_token');
+            localStorage.removeItem('prostream_user');
+            window.location.href = '/auth.html';
+        }
+
+        async function fetchVideos() {
+            try {
+                const res = await fetch(API_URL);
+                const videos = await res.json();
+                const grid = document.getElementById('video-grid');
+                grid.innerHTML = '';
+
+                videos.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                    <div class="player-preview" onclick="playVideo('${video._id}', '${video.title}')">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="var(--primary)">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-meta">${Math.round(video.size / 1024 / 1024)} MB • ${(new Date(video.uploadDate)).toLocaleDateString()}</div>
+                        <button onclick="deleteVideo('${video._id}')" style="margin-top:10px; background: #ef4444; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Delete</button>
+                    </div>
+                `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                console.error('Fetch error:', err);
+            }
+        }
+
+        function playVideo(id, title) {
+            const modal = document.getElementById('player-modal');
+            const video = document.getElementById('main-video');
+            const info = document.getElementById('player-info');
+
+            video.src = `${API_URL}/stream/${id}`;
+            info.innerHTML = `<h2>Streaming: ${title}</h2>`;
+            modal.style.display = 'flex';
+        }
+
+        function closePlayer() {
+            const modal = document.getElementById('player-modal');
+            const video = document.getElementById('main-video');
+            video.pause();
+            video.src = '';
+            modal.style.display = 'none';
+        }
+
+        async function deleteVideo(id) {
+            if (!confirm('Delete this video?')) return;
+            await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+            });
+            fetchVideos();
+        }
+
+        document.getElementById('upload-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('upload-status');
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('video', document.getElementById('video-file').files[0]);
+
+            status.innerHTML = 'Uploading stream... Please wait.';
+
+            try {
+                const res = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
+                    body: formData
+                });
+                if (res.ok) {
+                    status.innerHTML = 'Success! Video tracked in stream database.';
+                    document.getElementById('upload-form').reset();
+                    fetchVideos();
+                } else {
+                    const data = await res.json();
+                    status.innerHTML = `Upload failed: ${data.error || 'Check permissions'}`;
+                }
+            } catch (err) {
+                status.innerHTML = 'Error communicating with backend.';
+            }
+        };
+
+        checkAdmin();
+        fetchVideos();
+    </script>
+
+</body>
+
+</html>

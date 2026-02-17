@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProStream | Join the Universe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #a855f7;
+            --bg: #0b1f3c;
+            --card: rgba(15, 23, 42, 0.8);
+            --text: #f1f5f9;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.15) 0, transparent 40%),
+                radial-gradient(at 90% 90%, rgba(168, 85, 247, 0.15) 0, transparent 40%);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            border: 1px solid var(--glass);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        h2 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        p {
+            color: #94a3b8;
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass);
+            border-radius: 1rem;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .toggle-link {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .toggle-link span {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #status-msg {
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <a href="/" class="logo">ProStream</a>
+
+        <div id="login-view">
+            <h2>Welcome Back</h2>
+            <p>Your universe is waiting.</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <div class="toggle-link">New here? <span onclick="toggleView()">Create an account</span></div>
+        </div>
+
+        <div id="signup-view" style="display: none;">
+            <h2>Create Account</h2>
+            <p>Join the next generation of streaming.</p>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="signup-username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select id="signup-role">
+                        <option value="user">Viewer (User)</option>
+                        <option value="admin">Creator (Admin)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <div class="toggle-link">Already have an account? <span onclick="toggleView()">Login</span></div>
+        </div>
+
+        <div id="status-msg"></div>
+    </div>
+
+    <script>
+        function toggleView() {
+            const loginView = document.getElementById('login-view');
+            const signupView = document.getElementById('signup-view');
+            const isLogin = loginView.style.display !== 'none';
+
+            loginView.style.display = isLogin ? 'none' : 'block';
+            signupView.style.display = isLogin ? 'block' : 'none';
+            document.getElementById('status-msg').style.display = 'none';
+        }
+
+        function showStatus(msg, type) {
+            const status = document.getElementById('status-msg');
+            status.textContent = msg;
+            status.className = type;
+            status.style.display = 'block';
+        }
+
+        document.getElementById('signup-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const role = document.getElementById('signup-role').value;
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showStatus('Account created! Please login.', 'success');
+                    setTimeout(toggleView, 1500);
+                } else {
+                    showStatus(data.error || 'Signup failed', 'error');
+                }
+            } catch (err) {
+                showStatus('Network error occurred', 'error');
+            }
+        };
+
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('prostream_token', data.token);
+                    localStorage.setItem('prostream_user', JSON.stringify(data.user));
+                    showStatus('Login successful! Transporting...', 'success');
+
+                    setTimeout(() => {
+                        window.location.href = data.user.role === 'admin' ? '/admin.html' : '/';
+                    }, 1000);
+                } else {
+                    showStatus(data.error || 'Login failed', 'error');
+                }
+            } catch (err) {
+                showStatus('Network error occurred', 'error');
+            }
+        };
+
+        // Redirect if already logged in
+        const userJson = localStorage.getItem('prostream_user');
+        if (userJson) {
+            const user = JSON.parse(userJson);
+            window.location.href = user.role === 'admin' ? '/admin.html' : '/';
+        }
+    </script>
+
+</body>
+
+</html>
