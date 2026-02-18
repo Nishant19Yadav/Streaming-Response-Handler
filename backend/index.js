@@ -38,6 +38,20 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/firebase-config.js', (req, res) => {
+    const config = {
+        apiKey: process.env.VITE_FIREBASE_KEY,
+        authDomain: "prostream-app.firebaseapp.com",
+        projectId: "prostream-app",
+        storageBucket: "prostream-app.firebasestorage.app",
+        messagingSenderId: "954690644960",
+        appId: "1:954690644960:web:3d697bcc4fd94b592c1985",
+        measurementId: "G-PXFSJH4BGR"
+    };
+    res.type('application/javascript');
+    res.send(`window.firebaseConfig = ${JSON.stringify(config)};`);
+});
+
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
