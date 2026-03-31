@@ -179,7 +179,8 @@ header {
 .hero {
     height: 400px;
     border-radius: 20px;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent), url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2070&auto=format&fit=crop') center/cover;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%),
+        url('https://imgs.search.brave.com/gbxDMAf3IFhwXTn2YDYJnTHvEGm6YDsI4zkL68v1iJg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJhY2Nlc3Mu/Y29tL2Z1bGwvMzY2/ODMuanBn') center/cover no-repeat;
     margin-bottom: 40px;
     display: flex;
     flex-direction: column;
@@ -337,7 +338,8 @@ video {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=2070&auto=format&fit=crop') center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
 }
 
 .auth-card {

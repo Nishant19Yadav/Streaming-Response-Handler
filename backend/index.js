@@ -63,15 +63,28 @@ app.use('/api/videos', videoRoutes);
 // Database Connection
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000
 }).then(() => {
-    console.log('Connected to MongoDB');
+    console.log('✅ Successfully connected to MongoDB ATLAS');
     app.listen(PORT, () => {
-        console.log(`Streaming Platform running on http://localhost:${PORT}`);
+        console.log(`🚀 Streaming Platform running on http://localhost:${PORT}`);
     });
 }).catch(err => {
-    console.error('Mongo Connection Error:', err);
+    console.error('❌ FAILED to connect to MongoDB ATLAS');
+    console.error('Error Detail:', err.message);
+    console.error('--------------------------------------------------');
+    console.error('ACTION REQUIRED:');
+    console.error('1. Log into MongoDB Atlas Console.');
+    console.error('2. Go to "Network Access".');
+    console.error('3. Click "Add IP Address" and select "Allow Access from Anywhere".');
+    console.error('4. Check if your password in .env is correct.');
+    console.error('--------------------------------------------------');
+    process.exit(1);
 });
+
+
+
 
 // Handle graceful shutdown
 process.on('SIGTERM', () => {

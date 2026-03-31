@@ -61,7 +61,7 @@ function renderVideos(videos, container = videoGrid) {
     container.innerHTML = videos.map(v => `
         <div class="video-card" onclick="openPlayer('${v._id}')">
             <div class="thumbnail-container">
-                <img src="${v.thumbnail || '/placeholder-thumb.jpg'}" alt="${v.title}">
+                <img src="${v.thumbnail || 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2070&auto=format&fit=crop'}" alt="${v.title}">
                 <span class="duration">${v.duration || '0:00'}</span>
             </div>
             <div class="video-info">
@@ -78,7 +78,11 @@ function renderVideos(videos, container = videoGrid) {
 
 function setupHero(video) {
     const hero = document.getElementById('heroBanner');
-    hero.style.background = `linear-gradient(to right, rgba(0,0,0,0.8), transparent), url('${video.thumbnail}') center/cover`;
+    const thumb = video.thumbnail || 'https://imgs.search.brave.com/gbxDMAf3IFhwXTn2YDYJnTHvEGm6YDsI4zkL68v1iJg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJhY2Nlc3Mu/Y29tL2Z1bGwvMzY2/ODMuanBn';
+    hero.style.backgroundImage = `linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%), url('${thumb}')`;
+    hero.style.backgroundSize = 'cover';
+    hero.style.backgroundPosition = 'center';
+
     hero.querySelector('h1').innerText = video.title;
     hero.querySelector('p').innerText = video.description || 'Watch our latest trending video now.';
     document.getElementById('playHeroBtn').onclick = () => openPlayer(video._id);
