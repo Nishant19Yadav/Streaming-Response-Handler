@@ -5,7 +5,6 @@ RUN apk add --no-cache \
     gzip \
     pigz \
     bzip2 \
-    pbzip2 \
     xz \
     zstd \
     git \
