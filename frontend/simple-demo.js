@@ -3,7 +3,7 @@ const http = require('http');
 
 console.log(`
 ╔════════════════════════════════════════════════════════════╗
-║     Adaptive Streaming System - Quick Demo                ║
+║     Adaptive Streaming System - Quick Demo                 ║
 ╚════════════════════════════════════════════════════════════╝
 
 This demo will show you the adaptive buffering in action.
