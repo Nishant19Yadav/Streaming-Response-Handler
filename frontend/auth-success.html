@@ -12,7 +12,7 @@
         if (token) {
             localStorage.setItem('token', token);
             // We need to fetch user info if we want to store it, 
-            // but for now we'll just redirect to home and let app.js handle it
+            // but for now we'll just redirect to home and let app.js handle it.
             window.location.href = '/';
         } else {
             window.location.href = '/auth.html';
