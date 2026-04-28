@@ -1,4 +1,4 @@
-// scripts/track-protocol.js - CLI tool for tracking protocol changes
+// scripts/track-protocol.js - CLI tool for tracking protocol changes 
 const GitProtocolTracker = require('../lib/git-tracker');
 
 const tracker = new GitProtocolTracker();
