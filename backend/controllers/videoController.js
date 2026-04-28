@@ -12,28 +12,60 @@ const CompressionPipeline = require('../streams/compression');
 
 exports.uploadVideo = async (req, res) => {
     try {
+        // Check if video file is uploaded
         if (!req.files || !req.files.video) {
             return res.status(400).json({ error: 'No video file uploaded' });
         }
 
+        // Extract uploaded video file (first file from array)
         const videoFile = req.files.video[0];
+
+        // Extract thumbnail if provided, else set null
         const thumbnailFile = req.files.thumbnail ? req.files.thumbnail[0] : null;
 
+        // Create new Video document
         const video = new Video({
+            // Use title from request or fallback to original file name
             title: req.body.title || videoFile.originalname,
+
+            // Store description from request
             description: req.body.description,
-            videoUrl: `/api/videos/stream/${videoFile.filename}`, // Temporary internal mapping
+
+            // Internal streaming route for video playback
+            videoUrl: `/api/videos/stream/${videoFile.filename}`,
+
+            // Store actual filename for server access
             filename: videoFile.filename,
-            thumbnail: thumbnailFile ? `/uploads/${thumbnailFile.filename}` : '/placeholder-thumb.jpg',
+
+            // Thumbnail path (uploaded or default placeholder)
+            thumbnail: thumbnailFile 
+                ? `/uploads/${thumbnailFile.filename}` 
+                : '/placeholder-thumb.jpg',
+
+            // Store file type (e.g., video/mp4)
             mimetype: videoFile.mimetype,
+
+            // Store file size
             size: videoFile.size,
+
+            // Store duration (default if not provided)
             duration: req.body.duration || '0:00'
         });
 
+        // Save video data to database
         await video.save();
-        res.status(201).json({ message: 'Video uploaded successfully', video });
+
+        // Send success response
+        res.status(201).json({ 
+            message: 'Video uploaded successfully', 
+            video 
+        });
+
     } catch (error) {
+        // Log error for debugging
         console.error('Upload error:', error);
+
+        // Send failure response
         res.status(500).json({ error: 'Failed to upload video' });
     }
 };
